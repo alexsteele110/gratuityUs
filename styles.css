@@ -1,11 +1,21 @@
 body {
   font-family: 'Roboto', sans-serif;
 }
+
 hr {
   width: 56%;
   border: none;
   height: 2px;
   background-color: #d3d1d1;
+}
+
+.states {
+  stroke: #fff;
+  stroke-width: 1px;
+  transition: all 150ms linear;
+}
+.states:hover {
+  fill-opacity: 0.75;
 }
 
 #orange {
@@ -23,11 +33,6 @@ hr {
   color: #737a7d;
   text-align: center;
   margin-bottom: 40px;
-}
-
-#map {
-  border: 2px solid red;
-  height: 600px;
 }
 
 #discover {
