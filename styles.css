@@ -1,0 +1,39 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+hr {
+  width: 56%;
+  border: none;
+  height: 2px;
+  background-color: #d3d1d1;
+}
+
+#orange {
+  background-color: #fd6000;
+  height: 22px;
+  margin-bottom: 24px;
+}
+
+#title {
+  text-align: center;
+  color: #434343;
+}
+
+#subtitle {
+  color: #737a7d;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+#map {
+  border: 2px solid red;
+  height: 600px;
+}
+
+#discover {
+  height: 34px;
+  width: 140px;
+  position: absolute;
+  bottom: 12px;
+  right: 6px;
+}
