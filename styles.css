@@ -9,6 +9,10 @@ hr {
   background-color: #d3d1d1;
 }
 
+path {
+  fill: none;
+}
+
 .states {
   stroke: #fff;
   stroke-width: 1px;
