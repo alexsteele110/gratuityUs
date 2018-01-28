@@ -2,7 +2,7 @@ const svg = d3.select('svg');
 
 const path = d3.geoPath();
 
-d3.json('https://d3js.org/us-10m.v1.json', function(error, us) {
+d3.json('us.json', function(error, us) {
   if (error) throw error;
 
   const regions = {
@@ -40,7 +40,7 @@ d3.json('https://d3js.org/us-10m.v1.json', function(error, us) {
     }
   }
 
-  function chooseClass(d) {
+  function assignClass(d) {
     for (let region in regions) {
       if (regions[region].includes(d.id)) {
         return region;
@@ -49,23 +49,35 @@ d3.json('https://d3js.org/us-10m.v1.json', function(error, us) {
   }
 
   function handleMouseOver(d) {
-    const currentState = this;
+    const currentClass = this.className.baseVal;
 
     d3
-      .selectAll('.' + currentState.className.baseVal)
+      .selectAll('.' + currentClass)
       .transition()
-      .duration(200)
-      .style('opacity', 0.5);
+      .duration(300)
+      .style('opacity', 0.8);
+
+    d3
+      .selectAll('.label.' + currentClass)
+      .transition()
+      .duration(300)
+      .style('font-size', 28);
   }
 
   function handleMouseOut(d) {
-    const currentState = this;
+    const currentClass = this.className.baseVal;
 
     d3
-      .selectAll('.' + currentState.className.baseVal)
+      .selectAll('.' + currentClass)
       .transition()
-      .duration(200)
+      .duration(300)
       .style('opacity', 1);
+
+    d3
+      .selectAll('.label')
+      .transition()
+      .duration(300)
+      .style('font-size', 22);
   }
 
   svg
@@ -75,20 +87,16 @@ d3.json('https://d3js.org/us-10m.v1.json', function(error, us) {
     .data(topojson.feature(us, us.objects.states).features)
     .enter()
     .append('path')
-    .attr('class', chooseClass)
+    .attr('class', assignClass)
     .on('mouseover', handleMouseOver)
     .on('mouseout', handleMouseOut)
     .attr('d', path)
-    .style('fill', chooseFill)
-    .append('title')
-    .text(function(d) {
-      return d.id;
-    });
+    .style('fill', chooseFill);
 
   svg
     .append('path')
     .attr('stroke', '#fff')
-    .attr('stroke-width', 0.5)
+    .attr('stroke-width', 1.5)
     .attr(
       'd',
       path(
@@ -155,7 +163,7 @@ d3.json('https://d3js.org/us-10m.v1.json', function(error, us) {
     return svg
       .append('path')
       .attr('stroke', '#fff')
-      .attr('stroke-width', 4)
+      .attr('stroke-width', 5)
       .attr(
         'd',
         path(topojson.mesh(us, us.objects.states, border(pair[0], pair[1])))
