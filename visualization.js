@@ -1,8 +1,8 @@
-const svg = d3.select("svg");
+const svg = d3.select('svg');
 
 const path = d3.geoPath();
 
-d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
+d3.json('https://d3js.org/us-10m.v1.json', function(error, us) {
   if (error) throw error;
 
   const regions = {
@@ -19,7 +19,14 @@ d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 
   const percent = {
     thirteen: regions.westSouthCentral,
-    fifteen: [...regions.eastSouthCentral, ...regions.southAtlantic, ...regions.eastNorthCentral, ...regions.midWest, ...regions.mountain, ...regions.pacific],
+    fifteen: [
+      ...regions.eastSouthCentral,
+      ...regions.southAtlantic,
+      ...regions.eastNorthCentral,
+      ...regions.midWest,
+      ...regions.mountain,
+      ...regions.pacific
+    ],
     sixteen: [...regions.newEngland, ...regions.middleAtlantic]
   };
 
@@ -33,21 +40,63 @@ d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
     }
   }
 
-  svg.append("g")
-      .attr("fill", "#000")
-    .selectAll("path")
-    .data(topojson.feature(us, us.objects.states).features)
-    .enter().append("path")
-      .attr('class', 'states')
-      .attr("d", path)
-      .style('fill', chooseFill)
-    .append("title")
-      .text(function(d) { return d.id; });
+  function chooseClass(d) {
+    for (let region in regions) {
+      if (regions[region].includes(d.id)) {
+        return region;
+      }
+    }
+  }
 
-  svg.append("path")
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 0.5)
-      .attr("d", path(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })));
+  function handleMouseOver(d) {
+    const currentState = this;
+
+    d3
+      .selectAll('.' + currentState.className.baseVal)
+      .transition()
+      .duration(200)
+      .style('opacity', 0.5);
+  }
+
+  function handleMouseOut(d) {
+    const currentState = this;
+
+    d3
+      .selectAll('.' + currentState.className.baseVal)
+      .transition()
+      .duration(200)
+      .style('opacity', 1);
+  }
+
+  svg
+    .append('g')
+    .attr('fill', '#000')
+    .selectAll('path')
+    .data(topojson.feature(us, us.objects.states).features)
+    .enter()
+    .append('path')
+    .attr('class', chooseClass)
+    .on('mouseover', handleMouseOver)
+    .on('mouseout', handleMouseOut)
+    .attr('d', path)
+    .style('fill', chooseFill)
+    .append('title')
+    .text(function(d) {
+      return d.id;
+    });
+
+  svg
+    .append('path')
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 0.5)
+    .attr(
+      'd',
+      path(
+        topojson.mesh(us, us.objects.states, function(a, b) {
+          return a !== b;
+        })
+      )
+    );
 
   const borderPairs = [
     ['06', '32'],
@@ -98,15 +147,18 @@ d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
 
   function border(id0, id1) {
     return function(a, b) {
-      return a.id === id0 && b.id === id1
-          || a.id === id1 && b.id === id0;
+      return (a.id === id0 && b.id === id1) || (a.id === id1 && b.id === id0);
     };
-  };
+  }
 
   borderPairs.forEach(pair => {
-    return svg.append("path")
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 4)
-        .attr("d", path(topojson.mesh(us, us.objects.states, border(pair[0], pair[1]))))
+    return svg
+      .append('path')
+      .attr('stroke', '#fff')
+      .attr('stroke-width', 4)
+      .attr(
+        'd',
+        path(topojson.mesh(us, us.objects.states, border(pair[0], pair[1])))
+      );
   });
 });
