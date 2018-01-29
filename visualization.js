@@ -62,6 +62,12 @@ d3.json('us.json', function(error, us) {
       .transition()
       .duration(300)
       .style('font-size', 28);
+
+    d3
+      .selectAll('.pin.' + currentClass)
+      .transition()
+      .duration(300)
+      .style('r', 7);
   }
 
   function handleMouseOut(d) {
@@ -78,6 +84,12 @@ d3.json('us.json', function(error, us) {
       .transition()
       .duration(300)
       .style('font-size', 22);
+
+    d3
+      .selectAll('.pin.' + currentClass)
+      .transition()
+      .duration(300)
+      .style('r', 3);
   }
 
   svg
