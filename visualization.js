@@ -4,7 +4,7 @@ const path = d3.geoPath();
 
 d3.json('us.json', function(error, us) {
   if (error) throw error;
-
+  // numbers correspond to ids for each state in us.json file
   const regions = {
     eastSouthCentral: ['01', '21', '28', '47'],
     southAtlantic: ['12', '13', '45', '37', '51', '54', '24', '10'],
@@ -109,15 +109,9 @@ d3.json('us.json', function(error, us) {
     .append('path')
     .attr('stroke', '#fff')
     .attr('stroke-width', 1.5)
-    .attr(
-      'd',
-      path(
-        topojson.mesh(us, us.objects.states, function(a, b) {
-          return a !== b;
-        })
-      )
-    );
+    .attr('d', path(topojson.mesh(us, us.objects.states, (a, b) => a !== b)));
 
+  // allows highlighting of certain state boundaries
   const borderPairs = [
     ['06', '32'],
     ['06', '04'],
